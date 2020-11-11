@@ -83,11 +83,23 @@ def create_snapshots(project):
     instances = filter_instances(project)
 
     for i in instances:
+        print("Stopping {0}...".format(i.id))
+        i.stop()
+        i.wait_until_stopped()
+
         for v i.volumes.all():
             print("Creating snapshot of {0}".format(v.id))
             v.create_snapshots(Description="Created by CursoPython")
+        
+        print("Starting {0}...".format(i.id))
 
-            return
+        i.start()
+        i.wait_until_running()
+
+    
+    print("teminado")
+            
+    return
 
 @instances.command('list')
 @click.option('--project', default=None,
